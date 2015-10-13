@@ -9,7 +9,7 @@
 	    <meta name="description" content="">
 	    <meta name="author" content="">
 
-	    <title>Wordpress-workflow Documentation</title>
+	    <title>prestashop-workflow Documentation</title>
 
 	    <!-- Bootstrap Core CSS -->
 	    <link href="css/bootstrap.css" rel="stylesheet">
@@ -35,7 +35,7 @@
 
 		      <a class="navbar-brand" href="index.php">
 		      	<img src="images/wwb.png" alt="">
-		      	<span>Wordpress-<strong>workflow</strong></span>
+		      	<span>ps-<strong>workflow</strong></span>
 		      </a>
 		    </div>
 		  </div><!-- /.container-fluid -->
@@ -52,7 +52,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 name="wordpress-workflow">Dashboard</h1>
+                        <h1 name="prestashop-workflow">Dashboard</h1>
                         <hr>
 						<h2>Tests</h2>
                        	<section id="tests" class="row">

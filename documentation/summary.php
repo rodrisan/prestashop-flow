@@ -9,7 +9,7 @@
 	    <meta name="description" content="">
 	    <meta name="author" content="">
 
-	    <title>Wordpress-workflow Documentation</title>
+	    <title>prestashop-workflow Documentation</title>
 
 	    <!-- Bootstrap Core CSS -->
 	    <link href="css/bootstrap.css" rel="stylesheet">
@@ -34,7 +34,7 @@
 
 		      <a class="navbar-brand" href="index.php">
 		      	<img src="images/wwb.png" alt="">
-                <span>Wordpress-<strong>workflow</strong></span>
+                <span>ps-<strong>workflow</strong></span>
 		      </a>
 		    </div>
 		  </div><!-- /.container-fluid -->
@@ -51,20 +51,20 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 name="wordpress-workflow">Wordpress-workflow</h1>
+                        <h1 name="prestashop-workflow">prestashop-workflow</h1>
                         <hr>
                         <p>
-                            Wordpress-workflow is a tool that has been designed to keep the code of wordpress projects isolated
+                            prestashop-workflow is a tool that has been designed to keep the code of ps projects isolated
                             of the core and source files from third party plugins.
                         </p>
                         <h2>Objective</h2>
                         <p>
-                            Provide tools and procedures to carry out a proper versions control made in wordpress
+                            Provide tools and procedures to carry out a proper versions control made in ps
                             projects.
                         </p>
                         <p>
-                            The package is maintained by Vinco Orbis, suggestions and bug reports must be made to
-                            <a href="https://github.com/vinco/wordpress-workflow">https://github.com/vinco/wordpress-workflow</a>
+                            The package is maintained by rodrisan Orbis, suggestions and bug reports must be made to
+                            <a href="https://github.com/rodrisan/prestashop-workflow">https://github.com/rodrisan/prestashop-workflow</a>
                             as a new issue.
                         </p>
                     </div>
@@ -73,7 +73,7 @@
                     <div class="col-lg-12">
                         <h2> Structure </h2>
                         <p>
-                            Once installed Wordpress-workflow should have the following structure:
+                            Once installed prestashop-workflow should have the following structure:
                         </p>
                         <pre>
 .
@@ -86,7 +86,7 @@
 ├── fabfile.py 
 ├── environments.json
 ├── settings.json
-└── wordpress-workflow
+└── prestashop-workflow
                         </pre>
                         <p> 
                             All the code that is generated for the project should go in the src folder, this folder is
@@ -117,20 +117,20 @@
                         <pre>
 {
     "vagrant": {
-        "url": "wordpress.local",
+        "url": "ps.local",
 
         "user": "vagrant",
         "group": "vagrant",
         "hosts": ["127.0.0.1:2222"],
         "public_dir": "/home/vagrant/public_www/",
-        "wpworkflow_dir": "/home/vagrant/wordpress-workflow/",
+        "psworkflow_dir": "/home/vagrant/prestashop-workflow/",
         "command_prefixes": [],
 
-        "title": "wordpress workflow",
+        "title": "ps workflow",
         "admin_user": "admin",
         "admin_password": "password",
         "admin_email": "changeme@changeme.com",
-        "dbname": "wordpress_workflow",
+        "dbname": "ps_workflow",
         "dbuser": "root",
         "dbpassword": "password",
         "dbhost": "localhost"
@@ -169,8 +169,8 @@ $ fab environment:devel ...
 
                         <h2>Settings</h2>
                         <p> 
-                            Wordpress general settings are located in <code>settings.json</code>, this file contains 
-                            the general project configuration, you need to set it before installing wordpress or 
+                            ps general settings are located in <code>settings.json</code>, this file contains 
+                            the general project configuration, you need to set it before installing ps or 
                             running the fabric commands, the file looks as follows:
                         </p>
                         <pre>
@@ -180,7 +180,7 @@ $ fab environment:devel ...
     "theme": "twentyfourteen",
     "plugins": [
         {
-            "name": "wordpress-seo",
+            "name": "ps-seo",
             "active": true,
             "version": "stable"
         }
@@ -202,7 +202,7 @@ $ fab environment:devel ...
 
                         <p>
                             Every plugin you specify in <code>plugins</code> must be an official 
-                            plugin in wordpress.org/plugins, and will be installed for you.
+                            plugin in ps.org/plugins, and will be installed for you.
                         </p>
                         
                         <p>
@@ -222,8 +222,8 @@ $ fab environment:devel ...
                         <h2> Actions </h2>
 
                         <p>
-                            Wordpress-workflow has a set of tools that can be used for 
-                            development and deployment of wordpress projects.
+                            prestashop-workflow has a set of tools that can be used for 
+                            development and deployment of ps projects.
                         </p>
 
                         <p>
@@ -242,12 +242,12 @@ $ fab environment:devel ...
                         
                         <p>
                         <br/>
-                            For example to update the wordpress version
+                            For example to update the ps version
                             in the development environment.
                         </p>
 
                         <code>
-                            fab environment:vagrant wordpress_upgrade
+                            fab environment:vagrant ps_upgrade
                         </code>
 
                         <p>
@@ -291,19 +291,19 @@ $ fab environment:devel ...
                             </tr>
                             <tr>
                                 <td><a href="commands.php#create_config">create_config</a></td>
-                                <td>Writes wordpress configurations</td>
+                                <td>Writes ps configurations</td>
                             </tr>
                             <tr>
                                 <td><a href="commands.php#set_debug_mode">set_debug_mode</a> </td>
                                 <td>Changes debug mode, false by default</td>
                             </tr>
                             <tr>
-                                <td><a href="commands.php#wordpress_install">wordpress_install</a></td>
-                                <td>Downloads the wordpress version specified in settings.json and installs the database.</td>
+                                <td><a href="commands.php#ps_install">ps_install</a></td>
+                                <td>Downloads the ps version specified in settings.json and installs the database.</td>
                             </tr>
                             <tr>
                                 <td><a href="commands.php#activate_theme">activate_theme</a> </td>
-                                <td>Activates the selected theme in the current wordpress installation.</td>
+                                <td>Activates the selected theme in the current ps installation.</td>
                             </tr>
                             <tr>
                                 <td><a href="commands.php#install_plugins">install_plugins</a></td>
@@ -327,19 +327,19 @@ $ fab environment:devel ...
                             </tr>
                             <tr>
                                 <td><a href="commands.php#reset_all">reset_all</a></td>
-                                <td>Deletes all the wordpress installation and starts over.</td>
+                                <td>Deletes all the ps installation and starts over.</td>
                             </tr>
                             <tr>
                                 <td><a href="commands.php#sync_files">sync_files</a> </td>
                                 <td>Sync modified files and establish necessary permissions in selected environment.</td>
                             </tr>
                             <tr>
-                                <td><a href="commands.php#wordpress_upgrade">wordpress_upgrade</a> </td>
-                                <td>Downloads the new wordpress version specified in settings.json and upgrade it.</td>
+                                <td><a href="commands.php#ps_upgrade">ps_upgrade</a> </td>
+                                <td>Downloads the new ps version specified in settings.json and upgrade it.</td>
                             </tr>
                             <tr>
-                                <td><a href="commands.php#wordpress_downgrade">wordpress_downgrade</a></td>
-                                <td>Downloads the new specified wordpress version in settings.json and downgrade it</td>
+                                <td><a href="commands.php#ps_downgrade">ps_downgrade</a></td>
+                                <td>Downloads the new specified ps version in settings.json and downgrade it</td>
                             </tr>
                             <tr>
                                 <td><a href="commands.php#set_webserver">set_webserver</a></td>
@@ -366,8 +366,8 @@ $ fab environment:devel ...
                                 <td>Generates a backup copy of database and uploads</td>
                             </tr>
                             <tr>
-                                <td><a href="commands.php#wordpress_workflow_upgrade">wordpress_workflow_upgrade</a></td>
-                                <td>Upgrades wordpress-workflow</td>
+                                <td><a href="commands.php#ps_workflow_upgrade">ps_workflow_upgrade</a></td>
+                                <td>Upgrades prestashop-workflow</td>
                             </tr>
                         </table>
                     </div>

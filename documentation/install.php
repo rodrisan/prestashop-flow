@@ -9,7 +9,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Wordpress-workflow Documentation</title>
+        <title>prestashop-workflow Documentation</title>
 
         <!-- Bootstrap Core CSS -->
         <link href="css/bootstrap.css" rel="stylesheet">
@@ -34,7 +34,7 @@
               
               <a class="navbar-brand" href="index.php">
                 <img src="images/wwb.png" alt="">
-                <span>Wordpress-<strong>Workflow</strong></span>
+                <span>ps-<strong>Workflow</strong></span>
               </a>
             </div>
           </div><!-- /.container-fluid -->
@@ -56,7 +56,7 @@
                         <hr>
                         <p>
                             The installation is very simple, you only should create the folder where we will take the project
-                            and add wordpress-workflow as a submodule. Just after that you must run the shell script
+                            and add prestashop-workflow as a submodule. Just after that you must run the shell script
                             <code>startProject.sh</code> that is responsible for generating the basic structure of the project.
                         </p>
                         <p>
@@ -66,14 +66,14 @@
 $ mkdir new-project
 $ cd new-project
 $ git init
-$ git submodule add git@github.com:vinco/wordpress-workflow.git
-$ wordpress-workflow/startProject.sh
+$ git submodule add git@github.com:rodrisan/prestashop-workflow.git
+$ prestashop-workflow/startProject.sh
                         </pre>
                         <p>
                             After this, you must place the theme that you will use in the project in the folder <code>src/theme</code>
                         </p>
                         <p>
-                            Wordpress-workflow comes already integrated with a default development environment called <code> vagrant </code>
+                            prestashop-workflow comes already integrated with a default development environment called <code> vagrant </code>
                             so you must not modify it until it is necessary to generate a new environment.
                         </p>
                         <p>
@@ -81,20 +81,20 @@ $ wordpress-workflow/startProject.sh
                             with the specific project information. <br>
 
                             The variable <code>plugins</code> must contain the plugins that we want to use
-                            directly and without modifications from the page of wordpress. <br>
+                            directly and without modifications from the page of ps. <br>
                             The variable <code>custom_plugins</code> contains the plugins that we have modified
-                            or that are not in the official repository of wordpress and should be
+                            or that are not in the official repository of ps and should be
                             available in <code>src/plugins/</code>
                         </p>
                         <p>
-                            Once you have changed the files to our convenience, you should only start the installation of wordpress 
+                            Once you have changed the files to our convenience, you should only start the installation of ps 
                             running the <code>bootstrap</code> task
                         </p>
                         <pre>
 $ fab environment:vagrant bootstrap
                         </pre>
                         <p>
-                            At this point the project should be available in <code>http://wordpress.local</code>
+                            At this point the project should be available in <code>http://ps.local</code>
                         </p>
                     </div>
                 </div>

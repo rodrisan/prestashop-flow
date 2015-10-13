@@ -1,10 +1,10 @@
 {
-    "version": "4.1.1",
+    "version": "1.5.6.3",
     "locale": "es_ES",
-    "theme": "twentyfourteen",
+    "theme": "default",
     "plugins": [
         {
-            "name": "wordpress-seo",
+            "name": "ps-seo",
             "active": true,
             "version": "stable"
         }
@@ -15,7 +15,7 @@
             "active": true
         }
     ],
-    "wordpress-workflow" : [
+    "prestashop-workflow" : [
         {
             "dependencies-mannager": {
             "software": "",

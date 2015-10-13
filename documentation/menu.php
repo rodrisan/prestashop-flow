@@ -77,8 +77,8 @@
                     </a>
                 </li>
                 <li class="list-group-item">
-                    <a href="use_cases.php#upgrade_wordpress">
-                        Update wordpress
+                    <a href="use_cases.php#upgrade_ps">
+                        Update ps
                     </a>
                 </li>
                 <li class="list-group-item">
@@ -122,8 +122,8 @@
                     </a>
                 </li>
                 <li class="list-group-item">
-                    <a href="commands.php#wordpress_install">
-                        wordpress_install
+                    <a href="commands.php#ps_install">
+                        ps_install
                     </a>
                 </li>
                 <li class="list-group-item">
@@ -167,13 +167,13 @@
                     </a>
                 </li>
                 <li class="list-group-item">
-                    <a href="commands.php#wordpress_upgrade">
-                        wordpress_upgrade
+                    <a href="commands.php#ps_upgrade">
+                        ps_upgrade
                     </a>
                 </li>
                 <li class="list-group-item">
-                    <a href="commands.php#wordpress_downgrade">
-                        wordpress_downgrade
+                    <a href="commands.php#ps_downgrade">
+                        ps_downgrade
                     </a>
                 </li>
                 <li class="list-group-item">
@@ -207,8 +207,8 @@
                     </a>
                 </li>
                 <li class="list-group-item">
-                    <a href="commands.php#wordpress_workflow_upgrade">
-                        wordpress_workflow_upgrade
+                    <a href="commands.php#ps_workflow_upgrade">
+                        ps_workflow_upgrade
                     </a>
                 </li>
             </ul>

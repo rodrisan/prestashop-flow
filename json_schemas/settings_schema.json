@@ -1,23 +1,27 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Wordpress workflow settings",
-    "description": "wordpress' project wide settings",
+    "title": "PrestaShop workflow settings",
+    "description": "PrestaShop project wide settings",
     "type": "object",
     "properties": {
         "version": {
-            "description": "wordpress' version",
+            "description": "PrestaShop version",
+            "type": "string"
+        },
+        "full_version": {
+            "description": "PrestaShop full version",
             "type": "string"
         },
         "locale": {
-            "description": "wordpress' languaje setting",
+            "description": "PrestaShop languaje setting",
             "type": "string"
         },
         "theme": {
-            "description": "wordpress' theme to be used (must exist in src)",
+            "description": "PrestaShop theme to be used (must exist in src)",
             "type": "string"
         },
         "plugins": {
-            "description": "wordpress' plugins to be downloaded and install",
+            "description": "PrestaShop modules to be downloaded and install",
             "type": "array",
             "items": {
                 "type": "object",
@@ -40,7 +44,7 @@
             }
         },
         "custom_plugins": {
-            "description": "wordpress' plugins to be install from src",
+            "description": "PrestaShop modules to be install from src",
             "type": "array",
             "items": {
                 "type": "object",

@@ -10,7 +10,7 @@
       $this->tmpSessionName = "project_src_tmp_file";
       $this->tmpName = "project_src";
       $this->path = "/home/vagrant/public_www/wp-content/";
-      $this->command = 'phpcs --standard=WordPress-Core '.
+      $this->command = 'phpcs --standard=ps-Core '.
             '--report=json '.
             $this->path;
     }

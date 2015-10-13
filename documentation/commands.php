@@ -9,7 +9,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Wordpress-workflow Documentation</title>
+        <title>prestashop-workflow Documentation</title>
 
         <!-- Bootstrap Core CSS -->
         <link href="css/bootstrap.css" rel="stylesheet">
@@ -34,7 +34,7 @@
               
               <a class="navbar-brand" href="index.php">
                 <img src="images/wwb.png" alt="">
-                <span>Wordpress-<strong>Workflow</strong></span>
+                <span>ps-<strong>Workflow</strong></span>
               </a>
             </div>
           </div><!-- /.container-fluid -->
@@ -91,7 +91,7 @@ $ fab <strong>environment:<span class="args">env_name[,debug]</span></strong> ta
                         </pre>
                         <p>for example:</p>
                         <pre>
-$ fab <strong>environment:<span class="args">vagrant</span></strong> wordpress_upgrade
+$ fab <strong>environment:<span class="args">vagrant</span></strong> ps_upgrade
 $ fab <strong>environment:<span class="args">staging,True</span></strong> sync_files install_plugins
                         </pre>
 
@@ -118,7 +118,7 @@ $ fab environment:vagrant <strong>bootstrap</strong>
                     <div class="col-lg-12 anchor" id="create_config" name="create_config">
                         <h2>create_config</h2>
                         <p>
-                            Writes wordpress configurations
+                            Writes ps configurations
                         </p>
                         <pre>
 $ fab environment:env_name[,debug] <strong>create_config<span class="args">[:debug]</span></strong>
@@ -126,7 +126,7 @@ $ fab environment:env_name[,debug] <strong>create_config<span class="args">[:deb
 
                         <h4>Arguments</h4>
                         <ol>
-                            <li><strong><span class="args">debug</span></strong> <i>(boolean)</i> defines if wordpress should be configurated as debug mode 
+                            <li><strong><span class="args">debug</span></strong> <i>(boolean)</i> defines if ps should be configurated as debug mode 
                                 <i>(False by default).</i></li>
                         </ol>
                         
@@ -148,7 +148,7 @@ $ fab environment:env_name[,debug] <strong>set_debug_mode<span class="args">[:de
 
                         <h4>Arguments</h4>
                         <ol>
-                            <li><strong><span class="args">debug</span></strong> <i>(boolean)</i> defines if wordpress should be configurated as debug mode 
+                            <li><strong><span class="args">debug</span></strong> <i>(boolean)</i> defines if ps should be configurated as debug mode 
                                 <i>(False by default)</i>.</li>
                         </ol>
                         
@@ -159,13 +159,13 @@ $ fab environment:vagrant <strong>set_debug_mode:<span class="args">True</span><
 $ fab environment:vagrant <strong>set_debug_mode:<span class="args">False</span></strong>
                         </pre>
                    </div>
-                    <div class="col-lg-12 anchor" id="wordpress_install" name="wordpress_install">
-                        <h2>wordpress_install</h2>
+                    <div class="col-lg-12 anchor" id="ps_install" name="ps_install">
+                        <h2>ps_install</h2>
                         <p>
-                            Downloads the wordpress version specified in <code>settings.json</code> and installs the database.
+                            Downloads the ps version specified in <code>settings.json</code> and installs the database.
                         </p>
                         <pre>
-$ fab environment:env_name[,debug] <strong>wordpress_install</strong>
+$ fab environment:env_name[,debug] <strong>ps_install</strong>
                         </pre>
 
                         <h4>Arguments</h4>
@@ -173,13 +173,13 @@ $ fab environment:env_name[,debug] <strong>wordpress_install</strong>
                         
                         <h4>Examples</h4>
                         <pre>
-$ fab environment:vagrant <strong>wordpress_install</strong>
+$ fab environment:vagrant <strong>ps_install</strong>
                         </pre>
                    </div>
                    <div class="col-lg-12 anchor" id="activate_theme" name="activate_theme">
                         <h2>activate_theme</h2>
                         <p>
-                            Activates the selected theme in the current wordpress installation.
+                            Activates the selected theme in the current ps installation.
                         </p>
                         <pre>
 $ fab environment:env_name[,debug] <strong>activate_theme</strong>
@@ -291,7 +291,7 @@ $ fab environment:vagrant <strong>resetdb</strong>
                        <div class="col-lg-12 anchor" id="reset_all" name="reset_all">
                             <h2>reset_all</h2>
                             <p>
-                                Deletes all the wordpress installation and starts over.
+                                Deletes all the ps installation and starts over.
                             </p>
                             <pre>
 $ fab environment:env_name[,debug] <strong>reset_all</strong>
@@ -322,13 +322,13 @@ $ fab environment:env_name[,debug] <strong>sync_files</strong>
 $ fab environment:vagrant <strong>sync_files</strong>
                             </pre>
                        </div>
-                       <div class="col-lg-12 anchor" id="wordpress_upgrade" name="wordpress_upgrade">
-                            <h2>wordpress_upgrade</h2>
+                       <div class="col-lg-12 anchor" id="ps_upgrade" name="ps_upgrade">
+                            <h2>ps_upgrade</h2>
                             <p>
-                                Downloads the new wordpress version specified in <code>settings.json</code> and upgrades it.
+                                Downloads the new ps version specified in <code>settings.json</code> and upgrades it.
                             </p>
                             <pre>
-$ fab environment:env_name[,debug] <strong>wordpress_upgrade</strong>
+$ fab environment:env_name[,debug] <strong>ps_upgrade</strong>
                             </pre>
 
                             <h4>Arguments</h4>
@@ -336,16 +336,16 @@ $ fab environment:env_name[,debug] <strong>wordpress_upgrade</strong>
                             
                             <h4>Examples</h4>
                             <pre>
-$ fab environment:vagrant <strong>wordpress_upgrade</strong>
+$ fab environment:vagrant <strong>ps_upgrade</strong>
                             </pre>
                        </div>
-                       <div class="col-lg-12 anchor" id="wordpress_downgrade" name="wordpress_downgrade">
-                            <h2>wordpress_downgrade</h2>
+                       <div class="col-lg-12 anchor" id="ps_downgrade" name="ps_downgrade">
+                            <h2>ps_downgrade</h2>
                             <p>
-                                Downloads the new specified wordpress version in <code>settings.json</code> and downgrades it
+                                Downloads the new specified ps version in <code>settings.json</code> and downgrades it
                             </p>
                             <pre>
-$ fab environment:env_name[,debug] <strong>wordpress_downgrade</strong>
+$ fab environment:env_name[,debug] <strong>ps_downgrade</strong>
                             </pre>
 
                             <h4>Arguments</h4>
@@ -353,7 +353,7 @@ $ fab environment:env_name[,debug] <strong>wordpress_downgrade</strong>
                             
                             <h4>Examples</h4>
                             <pre>
-$ fab environment:vagrant <strong>wordpress_downgrade</strong>
+$ fab environment:vagrant <strong>ps_downgrade</strong>
                             </pre>
                        </div>
                        <div class="col-lg-12 anchor" id="set_webserver" name="set_webserver">
@@ -384,7 +384,7 @@ $ fab environment:vagrant <strong>set_webserver:<span class="args">apache2</span
                                 Updates a plugin to specified version in <code>settings.json</code>.
                             </p>
                             <p>
-                                <strong>Must be an official plugin in wordpress.org/plugins</strong>
+                                <strong>Must be an official plugin in ps.org/plugins</strong>
                             </p>
                             <pre>
 $ fab environment:env_name[,debug] <strong>upgrade_plugin<span class="args">:plugin_name</span></strong>
@@ -398,7 +398,7 @@ $ fab environment:env_name[,debug] <strong>upgrade_plugin<span class="args">:plu
                             
                             <h4>Examples</h4>
                             <pre>
-$ fab environment:vagrant <strong>upgrade_plugin:<span class="args">wordpress-seo</span></strong>
+$ fab environment:vagrant <strong>upgrade_plugin:<span class="args">ps-seo</span></strong>
                             </pre>
                        </div>
                        <div class="col-lg-12 anchor" id="check_plugins" name="check_plugins">
@@ -450,7 +450,7 @@ $ fab environment:env_name[,debug] <strong>make_tarball:<span class="args">targe
                                     <i>(<strong>Required</strong>)</i>.</li>
 
                                 <li><strong><span class="args">tar_name</span></strong> <i>(string)</i> Name for generated tallbar
-                                    <i>("wordpress-dist" by default)</i>.</li>
+                                    <i>("ps-dist" by default)</i>.</li>
                             </ol>
                             
                             <h4>Examples</h4>
@@ -484,31 +484,31 @@ $ fab environment:vagrant <strong>backup:<span class="args">database_backup,True
 $ fab environment:vagrant <strong>backup:<span class="args">database_backup,False</span></strong>
                             </pre>
                        </div>
-                       <div class="col-lg-12 anchor" id="wordpress_workflow_upgrade" name="wordpress_workflow_upgrade">
-                            <h2>wordpress_workflow_upgrade</h2>
+                       <div class="col-lg-12 anchor" id="ps_workflow_upgrade" name="ps_workflow_upgrade">
+                            <h2>ps_workflow_upgrade</h2>
                             <p>
-                                Upgrades wordpress-workflow
+                                Upgrades prestashop-workflow
                             </p>
                             <pre>
-$ fab environment:env_name[,debug] <strong>wordpress_workflow_upgrade<span class="args">[:repository][,branch]</span></strong>
+$ fab environment:env_name[,debug] <strong>ps_workflow_upgrade<span class="args">[:repository][,branch]</span></strong>
                             </pre>
 
                             <h4>Arguments</h4>
                             <ol>
-                            <li><strong><span class="args">repository</span></strong> Repository name to use in wordpress-workflow upgrade. 
+                            <li><strong><span class="args">repository</span></strong> Repository name to use in prestashop-workflow upgrade. 
                                 <i>("origin" by default)</i>.</li>
 
-                            <li><strong><span class="args">branch</span></strong> Branch name to use in wordpress-workflow upgrade. 
+                            <li><strong><span class="args">branch</span></strong> Branch name to use in prestashop-workflow upgrade. 
                                 <i>("master" by default)</i>.</li>
                         </ol>
                             
                             <h4>Examples</h4>
                             <pre>
-$ fab environment:vagrant <strong>wordpress_workflow_upgrade</strong>
-$ fab environment:vagrant <strong>wordpress_workflow_upgrade:<span class="args">origin,master</span></strong>
-$ fab environment:vagrant <strong>wordpress_workflow_upgrade:<span class="args">upstream</span></strong>
-$ fab environment:vagrant <strong>wordpress_workflow_upgrade:<span class="args">upstream,develop</span></strong>
-$ fab environment:vagrant <strong>wordpress_workflow_upgrade:<span class="args">origin,develop</span></strong>
+$ fab environment:vagrant <strong>ps_workflow_upgrade</strong>
+$ fab environment:vagrant <strong>ps_workflow_upgrade:<span class="args">origin,master</span></strong>
+$ fab environment:vagrant <strong>ps_workflow_upgrade:<span class="args">upstream</span></strong>
+$ fab environment:vagrant <strong>ps_workflow_upgrade:<span class="args">upstream,develop</span></strong>
+$ fab environment:vagrant <strong>ps_workflow_upgrade:<span class="args">origin,develop</span></strong>
                             </pre>
                        </div>
 

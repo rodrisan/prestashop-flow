@@ -9,7 +9,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Wordpress-workflow Documentation</title>
+        <title>prestashop-workflow Documentation</title>
 
         <!-- Bootstrap Core CSS -->
         <link href="css/bootstrap.css" rel="stylesheet">
@@ -34,7 +34,7 @@
               
               <a class="navbar-brand" href="index.php">
                 <img src="images/wwb.png" alt="">
-                <span>Wordpress-<strong>Workflow</strong></span>
+                <span>ps-<strong>Workflow</strong></span>
               </a>
             </div>
           </div><!-- /.container-fluid -->
@@ -134,7 +134,7 @@ $ fab environment:env_name sync_files install_plugins
                         <h2>Backup information</h2>
                         <p>
                             To make a backup that contains database and uploads information, 
-                            wordpress-workflow provides the <code>backup</code> command, that receives
+                            prestashop-workflow provides the <code>backup</code> command, that receives
                             two arguments: 
                         </p>
                         <ol>
@@ -170,22 +170,22 @@ $ fab environment:vagrant reset_db import_data
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-12 anchor" id="upgrade_wordpress" name="upgrade_wordpress">
-                        <h2> Update wordpress </h2>
+                    <div class="col-lg-12 anchor" id="upgrade_ps" name="upgrade_ps">
+                        <h2> Update ps </h2>
                         <p>
                             You only need to change the <code>version</code> variable that is located inside
-                            <code>settings.json</code> file to the wordpress version that you need to
+                            <code>settings.json</code> file to the ps version that you need to
                             update, then run the next command:
                         </p>
                         <pre>
-$ fab environment:vagrant wordpress_upgrade
+$ fab environment:vagrant ps_upgrade
                         </pre>
                         <p>
                             Once you have check that everything works correctly, you can
                             do deployment as follows:
                         </p>
                         <pre>
-$ fab environment:env_name wordpress_upgrade
+$ fab environment:env_name ps_upgrade
                         </pre>
                     </div>
                 </div>
@@ -193,7 +193,7 @@ $ fab environment:env_name wordpress_upgrade
                     <div class="col-lg-12 anchor" id="use_apache2_nginx" name="use_apache2_nginx">
                         <h2> Usar apache2/nginx </h2>
                         <p>
-                            Wordpress-workflow by default comes installed with nginx, if you want to
+                            prestashop-workflow by default comes installed with nginx, if you want to
                             test the code with apache server, it can be done by running
                             the command <code> set_webserver:server</code>.
                         </p>

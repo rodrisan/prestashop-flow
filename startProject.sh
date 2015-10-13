@@ -2,7 +2,7 @@
 #
 # startProject.sh
 #
-# creates the basic structure needed to develop a new wordpress project
+# creates the basic structure needed to develop a new ps project
 DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR"  ]]; then DIR="$PWD"; fi
 
@@ -14,12 +14,16 @@ if [[ ! -d "$DIR/../src" ]]; then
     mkdir $DIR/../src
 fi
 
+if [[ ! -d "$DIR/../src/modules" ]]; then
+    mkdir $DIR/../src/modules
+fi
+
 if [[ ! -d "$DIR/../src/themes" ]]; then
     mkdir $DIR/../src/themes
 fi
 
-if [[ ! -d "$DIR/../src/plugins" ]]; then
-    mkdir $DIR/../src/plugins
+if [[ ! -d "$DIR/../src/override" ]]; then
+    mkdir $DIR/../src/override
 fi
 
 if [[ ! -d "$DIR/../src/init" ]]; then

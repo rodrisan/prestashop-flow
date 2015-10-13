@@ -1,6 +1,6 @@
-# WordPress Workflow
+# Prestashop Workflow
 
-This project intents to give a standarized way to develop pages on wordpress. 
+This project intents to give a standarized way to develop pages on prestashop. 
 
 
 ## Requirements
@@ -14,7 +14,7 @@ This project intents to give a standarized way to develop pages on wordpress.
 
 ## Setup
 
-1. Create a directory wich will contain your wordpress project
+1. Create a directory wich will contain your prestashop project
 
     ```bash
     $ mkdir my-new-project
@@ -30,13 +30,13 @@ This project intents to give a standarized way to develop pages on wordpress.
 3. Clone this repo in your project's root directory
 
     ```bash
-    $ git submodule add https://github.com/vinco/wordpress-workflow.git
+    $ git submodule add https://github.com/rodrisan/prestashop-workflow.git
     ```
 
-4. Run the `startProject.sh` script to create the WordPress Workflow scaffolding
+4. Run the `startProject.sh` script to create the Prestashop Workflow scaffolding
 
     ```bash
-    $ wordpress-workflow/startProject.sh
+    $ prestashop-workflow/startProject.sh
     ```
 
 ## Workflow
@@ -76,7 +76,7 @@ environment that you require.
         "group": "www-data",
         "hosts": ["my-host.com"],
         "site_dir": "/srv/www/my-site.com/public/",
-        "wordpress_dir": "/srv/www/my-site.com/workflow/",
+        "prestashop_dir": "/srv/www/my-site.com/workflow/",
         "command_prefixes": [
             "/srv/www/my-site-com/env/activate"
         ]
@@ -106,7 +106,7 @@ $ fab environment:devel ...
 ### settings.json
 
 This file contains the general project configuration, you need to set it before
-installing wordpress or running the fabric commands.
+installing prestashop or running the fabric commands.
 
 ```json
 {
@@ -115,7 +115,7 @@ installing wordpress or running the fabric commands.
     "theme": "yourtheme",
     "plugins": [
         {
-            "name": "wordpress-seo",
+            "name": "ps-seo",
             "active": true,
             "version": "stable"
         }
@@ -133,7 +133,7 @@ installing wordpress or running the fabric commands.
 
 You need to have the `theme` in `src/themes/` otherwise the installation will fail.
 
-Every plugin you specify in `plugins` must be a official plugin in wordpress.org/plugins,
+Every plugin you specify in `plugins` must be a official plugin in ps.org/plugins,
 and will be installed for you.
 
 Any plugin in `custom_plugins` must be placed on `src/plugins/` sinces the plugins
@@ -141,13 +141,13 @@ won't be downloaded and are intended for your code.
 
 (You can set the version and locale to whatever you need for your project)
 
-Now you can install wordpress on your vagrant machine by running the following command:
+Now you can install prestashop on your vagrant machine by running the following command:
 
 ```
 $ fab environment:vagrant bootstrap
 ```
 
-This will Create the database, install the version of wordpress you specified, activate all plugins, and set the theme. 
+This will Create the database, install the version of prestashop you specified, activate all plugins, and set the theme. 
 If you get any errors durring the setup processes you will have to fix the error and then run "$ fab vagrant reset_all" which will clean up the failed installation and automatically re-run bootstrap.
 
 
@@ -169,17 +169,17 @@ $ fab environment:devel deploy install_plugins
 
 Available commands:
 ```
-activate_theme     Activates wordpress theme given in settings
-bootstrap          Sets up wordpress installation for the first time
+activate_theme     Activates prestashop theme given in settings
+bootstrap          Sets up prestashop installation for the first time
 deploy             Syncs files to enviroment
 envverify          Verifies the environment is created correctly
 export_data        Exports current database to database/data.sql
 import_data        Imports database from database/data.sql
 install_plugins    Installs plugins and activates them according to settings
-reset_all          Deletes all wordpress installment and runs bootstrap
+reset_all          Deletes all prestashop installment and runs bootstrap
 resetdb            Drops database and creates it again (without data or structure)
 vagrant            Local development environment (Vagrant virtual machine).
-wordpress_install  Downloads wordpress version written in settings and creates database
+prestashop_install  Downloads prestashop version written in settings and creates database
 ```
 
 You can list the available enviroments and task by running ``fab --list``
@@ -192,17 +192,17 @@ All of your development should be placed in the src/ directories:
 src/database: All .sql files should be placed here
 src/init:     At the moment this should be empty
 src/plugins:  All the plugins you're developing or modifying, note that
-              any wordpress plugins not made by you should not be in here
+              any prestashop plugins not made by you should not be in here
 src/themes:   All the themes needed for your project, if you're not using it
               it should not be here 
 
 
 ## Access
 
-You can now browse to http://wordpress.local where you can find you installation of wordpress.
-Use the username and password from your settings.py file to access the admin desktop http://wordpress.local/wp-admin
+You can now browse to http://ps.local where you can find you installation of ps.
+Use the username and password from your settings.py file to access the admin desktop http://ps.local/wp-admin
 
 ## Documentation
 
-Just after `startProject.sh` has finished you can enter to http://wordpress-workflow.local to see the entire
+Just after `startProject.sh` has finished you can enter to http://prestashop-workflow.local to see the entire
 project documentation.

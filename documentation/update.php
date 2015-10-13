@@ -9,7 +9,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Wordpress-workflow Documentation</title>
+        <title>prestashop-workflow Documentation</title>
 
         <!-- Bootstrap Core CSS -->
         <link href="css/bootstrap.css" rel="stylesheet">
@@ -34,7 +34,7 @@
               
               <a class="navbar-brand" href="index.php">
                 <img src="images/wwb.png" alt="">
-                <span>Wordpress-<strong>Workflow</strong></span>
+                <span>ps-<strong>Workflow</strong></span>
               </a>
             </div>
           </div><!-- /.container-fluid -->
@@ -55,16 +55,16 @@
                         <h1> Update </h1>
                         <hr>
                         <p> 
-                            To get the new features of the wordpress-workflow project, you must run the <code>wordpress_workflow_upgrade</code> command 
+                            To get the new features of the prestashop-workflow project, you must run the <code>ps_workflow_upgrade</code> command 
                         </p>
                         <pre>
-$ fab wordpress_workflow_upgrade
+$ fab ps_workflow_upgrade
                         </pre>
                         <p>
                             The command allows you to specify the repository and branch to use, for example:
                         </p>
                         <pre>
-$ fab wordpress_workflow_upgrade:vinco,development
+$ fab ps_workflow_upgrade:rodrisan,development
                         </pre>
                     </div>
                 </div>

@@ -19,7 +19,7 @@ def environment(env_name, debug=False):
     """
     Creates the configurations for the environment in which tasks will run.
     """
-    schemas_dir = "wordpress-workflow/json_schemas/"
+    schemas_dir = "prestashop-workflow/json_schemas/"
     state.output['running'] = boolean(debug)
     state.output['stdout'] = boolean(debug)
     print "Establishing environment " + blue(env_name, bold=True) + "..."
@@ -57,26 +57,26 @@ def bootstrap():
     """
     Creates the database, test information and enables rewrite.
     """
-    require('dbname', 'dbuser', 'dbpassword', 'dbhost')
+    require('dbname', 'dbuser', 'dbpassword', 'dbhost', 'repo')
     print "Creating local environment."
     # Creates database
     run("""
         echo "DROP DATABASE IF EXISTS {dbname}; CREATE DATABASE {dbname};
-        "|mysql --batch --user={dbuser} --password=\"{dbpassword}\" --host={dbhost}
+        "|mysql --batch --user=\"{dbuser}\" --password=\"{dbpassword}\" --host=\"{dbhost}\"
         """.format(**env))
     # Enables apache module
     run('sudo a2enmod rewrite')
-    wordpress_install()
+    prestashop_install()
 
 
 @task
 def create_config(debug=False):
     """
-    Writes wordpress configurations
+    Writes ps configurations
     """
     require('public_dir', 'dbname', 'dbuser', 'dbpassword')
 
-    block_wordpress_php = """--extra-php <<PHP
+    block_ps_php = """--extra-php <<PHP
                           define('DISALLOW_FILE_EDIT', true);
                           define('DISALLOW_FILE_MODS', true);
                           define('WP_AUTO_UPDATE_CORE', false);
@@ -89,7 +89,7 @@ def create_config(debug=False):
                     define('WP_DEBUG_LOG', true);
                     """
 
-    env['extra_php'] = block_wordpress_php + debug_php
+    env['extra_php'] = block_ps_php + debug_php
 
     print "Setting debug mode to: {0}".format(debug)
 
@@ -111,41 +111,146 @@ def set_debug_mode(debug=False):
 
 
 @task
-def wordpress_install():
+def prestashop_setup():
     """
-    Downloads the wordpress version specified in settings.json and installs the database.
+    Changes debug mode, false by default
     """
-    require('wpworkflow_dir', 'public_dir', 'dbname', 'dbuser', 'dbpassword')
-    require('url', 'title', 'admin_user', 'admin_password', 'admin_email')
+    
+    require('psworkflow_dir', 'public_dir', 'home_dir', 'dbhost', 'dbname', 'dbuser', 'dbpassword', 'repo', 'tag_url')
+    require('url', 'title', 'admin_user', 'admin_password', 'admin_email', 'theme', 'version')
+    
+    with cd(env.public_dir):
+    
+        print 'Realizando la configuración del prestashop'
+        run('php install-dev/index_cli.php --language=es --timezone="America/Mexico_City" --base_uri="/" --domain="{url}" --db_server="{dbhost}" --db_user="{dbuser}" --db_password="{dbpassword}" --db_name="{dbname}" --prefix="prestashop_" --name="{title}" --country="mx" --firstname="{admin_user}" --lastname="{admin_user}" --password="{admin_password}" --email="{admin_email}" --send_email="1"'.format(**env))
 
-    print "Downloading wordpress..."
-    #Downloads wordpress
-    run('wp core download --version={version} --path={public_dir} '
-        '--locale={locale} --force'.format(**env))
+        print green('Configuración completa')
 
-    print "Creating wordpress configurations..."
-    #creates config
-    create_config()
 
-    print "Installing wordpress..."
-    #Installs into db
-    run('wp core install --url="{url}" --title="{title}" '
-        '--admin_user="{admin_user}" --admin_password="{admin_password}" '
-        ' --admin_email="{admin_email}" --path={public_dir}'.format(**env))
+@task
+def fix_permissions():
+    """
+    Fix permissions
+    """
+    
+    require('psworkflow_dir', 'public_dir', 'home_dir', 'dbhost', 'dbname', 'dbuser', 'dbpassword', 'repo', 'tag_url')
+    require('url', 'title', 'admin_user', 'admin_password', 'admin_email', 'theme', 'version')
+    
+    with cd(env.public_dir):
+    
+        print white("Estableciendo permisos...", bold=True)
+        
+        #run('chmod -R o-rwx {0}'.format(env.psworkflow_dir))
+        #run('chmod -R o-rwx {0}'.format(env.public_dir))
+        run('chgrp -R {0} {1}'.format(env.group, env.psworkflow_dir))
+        run('chgrp -R {0} {1}'.format(env.group, env.public_dir))
+        run('find . -type d -exec chmod 0755 {} \;')
+        run('find config/xml/ -type d -exec chmod 0777 {} \;')
+        run('find cache/ -type d -exec chmod 0777 {} \;')
+        run('find . -type f -exec chmod 0644 {} \;')
+        
+        print green("Permisos establecidos correctamente.", bold=True)
 
-    print "Installing wordpress-workflow..."
-    #Creates simbolic link to themes
-    run('rm -rf {public_dir}wp-content/themes &&  '
-        'ln -s {wpworkflow_dir}themes {public_dir}wp-content'.format(**env))
+@task
+def prestashop_install():
+    """
+    Downloads the ps version specified in settings.json and installs the database.
+    """
+    require('psworkflow_dir', 'public_dir', 'home_dir', 'dbhost', 'dbname', 'dbuser', 'dbpassword', 'repo', 'tag_url')
+    require('url', 'title', 'admin_user', 'admin_password', 'admin_email', 'theme', 'version')
 
-    install_plugins()
-    activate_theme()
+    if env.version == '1.5':
+        url = env.tag_url + "-" + env.version + '/archive/' + env.full_version + '.tar.gz'
+    elif env.version == '1.4':
+        url = env.tag_url + "-" + env.version + '/archive/' + env.full_version + '.tar.gz'
+    else:
+        url = env.tag_url + '/archive/' + env.full_version + '.tar.gz'
+
+    with cd(env.public_dir):
+    
+        print 'Eliminando instalación'
+        run('sudo rm -rf *')
+    
+        print 'Downloading from ' + url
+        run('curl -L -o prestashop.tar.gz ' + url)
+        #run('rm -rf prestashop')
+        
+    with cd(env.public_dir):
+        print 'Descomprimiendo'
+        run('tar -zxvf prestashop.tar.gz')
+
+        print 'Obteniendo el nombre de la carpeta y moviendo archivos'
+        run('folder=$(ls -d */) && cp -r $folder/* . && rm -rf $folder')
+        print 'Moviendo el contenido de la carpeta $folder'
+
+        print 'Borrando tar.gz'
+        run('rm prestashop.tar.gz')
+
+        print "Installing prestashop-workflow..."
+        #Creates simbolic link to themes
+        run('rm -rf {public_dir}themes &&  '
+            'ln -s {psworkflow_dir}themes {public_dir}'.format(**env))
+
+        #Creates simbolic link to override
+        run('rm -rf {public_dir}override &&  '
+            'ln -s {psworkflow_dir}override {public_dir}'.format(**env))
+
+        print 'Inicializando shop'
+        run('shop init default')
+        
+    prestashop_setup()
+    #install_plugins()
+    #activate_theme()
+
+
+@task
+def clean_cache():
+    """
+    Changes debug mode, false by default
+    """
+    with cd(env.public_dir):
+        clean_cache_css_js()
+        clean_cache_class()
+
+
+@task
+def clean_cache_css_js():
+    """
+    Changes debug mode, false by default
+    """
+    with cd(env.public_dir):
+        run('shop clean cache')
+
+
+@task
+def clean_cache_class():
+    """
+    Changes debug mode, false by default
+    """
+    with cd(env.public_dir):
+        run('shop clean class')
+
+
+@task
+def set_rewrite(value=0):
+
+    require('psworkflow_dir', 'public_dir', 'home_dir', 'dbhost', 'dbname', 'dbuser', 'dbpassword', 'repo', 'tag_url')
+    require('url', 'title', 'admin_user', 'admin_password', 'admin_email', 'theme', 'version')
+    run('mysql -u{0} -p\'{1}\' -e "USE {2}; UPDATE prestashop_configuration SET value = \'{3}\' WHERE name = \'PS_REWRITING_SETTINGS\';"'.format(env.dbuser, env.dbpassword, env.dbname, value))
+
+
+@task
+def set_domain(value=0):
+
+    require('psworkflow_dir', 'public_dir', 'home_dir', 'dbhost', 'dbname', 'dbuser', 'dbpassword', 'repo', 'tag_url')
+    require('url', 'title', 'admin_user', 'admin_password', 'admin_email', 'theme', 'version')
+    run('mysql -u{0} -p\'{1}\' -e "USE {2}; UPDATE prestashop_configuration SET value = \'{3}\' WHERE name = \'PS_REWRITING_SETTINGS\';"'.format(env.dbuser, env.dbpassword, env.dbname, value))
 
 
 @task
 def activate_theme():
     """
-    Activates the selected theme in the current wordpress installation.
+    Activates the selected theme in the current ps installation.
     """
     require('public_dir', 'theme')
 
@@ -159,7 +264,7 @@ def install_plugins():
     """
     Installs plugins and initialize according to the settings.json file.
     """
-    require('public_dir', 'wpworkflow_dir')
+    require('public_dir', 'psworkflow_dir')
 
     check_plugins()
     print "Installing plugins..."
@@ -173,7 +278,7 @@ def install_plugins():
                 fi
                 """.format(
                 custom_plugin['name'],
-                env.wpworkflow_dir,
+                env.psworkflow_dir,
                 env.public_dir
                 ))
 
@@ -227,19 +332,15 @@ def change_domain():
     require('url')
 
     print ("Making actions to change project's url to: "
-           + blue(env.url, bold=True) + "...")
+        + blue(env.url, bold=True) + "...")
 
     with cd(env.public_dir):
         if env.is_vagrant:
             print "Reloading vagrant virtual machine..."
-            local("vagrant halt")
-            local("vagrant up")
 
         print "Changing project url configuration..."
-        run("""
-            wp option update home http://{url} &&\
-            wp option update siteurl http://{url}
-            """.format(**env))
+        run('mysql -u{0} -p\'{1}\' -e "USE {2}; UPDATE prestashop_configuration SET value = \'{3}\' WHERE name = \'PS_SHOP_DOMAIN\';"'.format(env.dbuser, env.dbpassword, env.dbname, env.url))
+        run('mysql -u{0} -p\'{1}\' -e "USE {2}; UPDATE prestashop_configuration SET value = \'{3}\' WHERE name = \'PS_SHOP_DOMAIN_SSL\';"'.format(env.dbuser, env.dbpassword, env.dbname, env.url))
 
 
 @task
@@ -247,7 +348,7 @@ def import_data(file_name="data.sql"):
     """
     Imports the database to given file name. database/data.sql by default.
     """
-    require('wpworkflow_dir', 'dbuser', 'dbpassword', 'dbhost')
+    require('psworkflow_dir', 'dbuser', 'dbpassword', 'dbhost')
     require('admin_user', 'admin_password', 'admin_email', 'url')
 
     env.file_name = file_name
@@ -255,21 +356,17 @@ def import_data(file_name="data.sql"):
     print "Importing data from file: " + blue(file_name, bold=True) + "..."
     run("""
         mysql -u {dbuser} -p\"{dbpassword}\" {dbname} --host={dbhost} <\
-        {wpworkflow_dir}database/{file_name} """.format(**env))
+        {psworkflow_dir}database/{file_name} """.format(**env))
 
     with cd(env.public_dir):
-
         # Changes the domain
-        run("""
-            wp option update home http://{url} &&\
-            wp option update siteurl http://{url}
-            """.format(**env))
+        change_domain()
 
         # changes the user
-        run("""
-            wp user update {admin_user} --user_pass=\"{admin_password}\"\
-            --user_email={admin_email}
-            """.format(**env))
+        #run("""
+        #    wp user update {admin_user} --user_pass=\"{admin_password}\"\
+        #    --user_email={admin_email}
+        #    """.format(**env))
 
 
 @task
@@ -277,7 +374,7 @@ def export_data(file_name="data.sql", just_data=False):
     """
     Exports the database to given file name. database/data.sql by default.
     """
-    require('wpworkflow_dir', 'dbuser', 'dbpassword', 'dbname', 'dbhost')
+    require('psworkflow_dir', 'dbuser', 'dbpassword', 'dbname', 'dbhost')
 
     export = True
 
@@ -287,10 +384,10 @@ def export_data(file_name="data.sql", just_data=False):
     else:
         env.just_data = " "
 
-    if exists('{wpworkflow_dir}database/{file_name}'.format(**env)):
+    if exists('{psworkflow_dir}database/{file_name}'.format(**env)):
         export = confirm(
             yellow(
-                '{wpworkflow_dir}database/{file_name} '.format(**env)
+                '{psworkflow_dir}database/{file_name} '.format(**env)
                 +
                 'already exists, Do you want to overwrite it?'
             )
@@ -301,7 +398,7 @@ def export_data(file_name="data.sql", just_data=False):
         run(
             """
             mysqldump -u {dbuser} -p\"{dbpassword}\" {dbname} --host={dbhost}\
-            {just_data} > {wpworkflow_dir}database/{file_name}
+            {just_data} > {psworkflow_dir}database/{file_name}
             """.format(**env)
         )
     else:
@@ -326,7 +423,7 @@ def resetdb():
 @task
 def reset_all():
     """
-    Deletes all the wordpress installation and starts over.
+    Deletes all the ps installation and starts over.
     """
     require('public_dir')
     print "Deleting directory content: " + blue(env.public_dir, bold=True) + "..."
@@ -339,31 +436,31 @@ def sync_files():
     """
     Sync modified files and establish necessary permissions in selected environment.
     """
-    require('group', 'wpworkflow_dir', 'public_dir')
+    require('group', 'psworkflow_dir', 'public_dir')
 
-    print white("Uploading code to server...", bold=True)
-    ursync_project(
-        local_dir='./src/',
-        remote_dir=env.wpworkflow_dir,
-        delete=True,
-        default_opts='-chrtvzP'
-    )
+    #print white("Uploading code to server...", bold=True)
+    #ursync_project(
+    #    local_dir='./src/',
+    #    remote_dir=env.psworkflow_dir,
+    #    delete=True,
+    #    default_opts='-chrtvzP'
+    #)
 
     print white("Estableciendo permisos...", bold=True)
-    run('chmod -R o-rwx {0}'.format(env.wpworkflow_dir))
+    run('chmod -R o-rwx {0}'.format(env.psworkflow_dir))
     run('chmod -R o-rwx {0}'.format(env.public_dir))
-    run('chgrp -R {0} {1}'.format(env.group, env.wpworkflow_dir))
+    run('chgrp -R {0} {1}'.format(env.group, env.psworkflow_dir))
     run('chgrp -R {0} {1}'.format(env.group, env.public_dir))
 
     print green(u'Successfully sync.')
 
 
 @task
-def wordpress_upgrade():
+def ps_upgrade():
     """
-    Downloads the new wordpress version specified in settings.json and upgrade it.
+    Downloads the new ps version specified in settings.json and upgrade it.
     """
-    require('public_dir', 'wpworkflow_dir', 'version', 'locale')
+    require('public_dir', 'psworkflow_dir', 'version', 'locale')
     with cd(env.public_dir):
         current_ver = run(""" wp core version""")
         request_ver = env.version
@@ -377,15 +474,15 @@ def wordpress_upgrade():
 
     else:
         print red("""
-                  Current wordpress version in settings.json {0}
+                  Current ps version in settings.json {0}
                   must be later than current version {1}
                   """.format(request_ver, current_ver))
 
 
 @task
-def wordpress_downgrade():
+def ps_downgrade():
     """
-    Downloads the new specified wordpress version in settings.json and downgrade it
+    Downloads the new specified ps version in settings.json and downgrade it
     """
     require('version', 'public_dir', 'locale')
 
@@ -401,7 +498,7 @@ def wordpress_downgrade():
         print green('Downgrade to versión ' + request_ver + ' success.')
     else:
         print red("""
-                  The wordpress version in settings.json {0}
+                  The ps version in settings.json {0}
                   must be earlier than current version {1}
                   """.format(request_ver, current_ver))
 
@@ -416,7 +513,7 @@ def set_webserver(webserver="nginx"):
     if webserver == "apache2":
         sudo("service nginx stop")
         sudo("a2enmod rewrite")
-        with open('wordpress-workflow/defaults/htaccess') as htaccess:
+        with open('prestashop-workflow/defaults/htaccess') as htaccess:
             urun(" echo '{0}' > {1}.htaccess".
                  format(htaccess.read(), env.public_dir))
 
@@ -516,7 +613,7 @@ def clean_plugins():
             plugins_to_delete.append(installed_plugin['name'])
     if plugins_to_delete:
         print yellow(
-            u'There are plugins installed on wordpress '
+            u'There are plugins installed on ps '
             u'that are not specified in settings.json. '
             u'These plugins must be uninstalled before installing, '
             u'updating, or syncing new plugins.\n'
@@ -559,13 +656,13 @@ def search_plugin(plugin_searched, search_list=None):
 
 
 @task
-def make_tarball(target_environment, tar_name="wordpress-dist"):
+def make_tarball(target_environment, tar_name="ps-dist"):
     """
     Generates a tallbar to upload to servers without ssh.
     """
     environment('vagrant')
-    env.tmp_dir = "/home/vagrant/wordpress-dist/"
-    env.tmp_dir_name = "wordpress-dist"
+    env.tmp_dir = "/home/vagrant/ps-dist/"
+    env.tmp_dir_name = "ps-dist"
     env.host_string = env.hosts[0]
 
     check_plugins()
@@ -582,8 +679,8 @@ def make_tarball(target_environment, tar_name="wordpress-dist"):
     urun('mkdir {tmp_dir}'.format(**env))
 
     # Downloads
-    print "Downloading and generating wordpress configuration..."
-    #Downloads wordpress
+    print "Downloading and generating ps configuration..."
+    #Downloads ps
     urun('wp core download --version={version} --path={tmp_dir} '
          '--locale={locale} --force'.format(**env))
     #creates config
@@ -609,16 +706,16 @@ def make_tarball(target_environment, tar_name="wordpress-dist"):
     )
 
     # Install wodpress
-    print "Installing temporary wordpress..."
+    print "Installing temporary ps..."
     urun('wp core install --url="{url}" --title="{title}" '
          '--admin_user="{admin_user}" --admin_password="{admin_password}" '
          ' --admin_email="{admin_email}" --path={tmp_dir}'.format(**db_config))
 
-    # Cleans default wordpress files
+    # Cleans default ps files
     urun('rm -rf {tmp_dir}wp-content/themes/*'.format(**env))
     urun('rm -rf {tmp_dir}wp-content/plugins/*'.format(**env))
     # Copy theme
-    urun('cp -rf {wpworkflow_dir}themes/* {tmp_dir}wp-content/themes/'.
+    urun('cp -rf {psworkflow_dir}themes/* {tmp_dir}wp-content/themes/'.
          format(**env))
 
     # Download all require plugins
@@ -632,7 +729,7 @@ def make_tarball(target_environment, tar_name="wordpress-dist"):
         print "Copying plugin: " + blue(plugin['name'], bold=True)
         urun(
             """
-            cp -rf {wpworkflow_dir}plugins/{plugin} \
+            cp -rf {psworkflow_dir}plugins/{plugin} \
             {tmp_dir}wp-content/plugins
             """.format(**env)
         )
@@ -640,7 +737,7 @@ def make_tarball(target_environment, tar_name="wordpress-dist"):
     print "Generating packaging..."
     env.tar_name = tar_name
     with cd(env.tmp_dir + ".."):
-        urun('tar -czf {wpworkflow_dir}{tar_name}.tar.gz {tmp_dir_name}/*'
+        urun('tar -czf {psworkflow_dir}{tar_name}.tar.gz {tmp_dir_name}/*'
              .format(**env))
         os.rename(
             './src/{tar_name}.tar.gz'.format(**env),
@@ -666,7 +763,7 @@ def backup(tarball_name='backup', just_data=False):
     """
     Generates a backup copy of database and uploads
     """
-    require('wpworkflow_dir', 'public_dir')
+    require('psworkflow_dir', 'public_dir')
 
     env.tarball_name = tarball_name
 
@@ -677,30 +774,30 @@ def backup(tarball_name='backup', just_data=False):
     if not os.path.exists('./backup/'):
         os.makedirs('./backup/')
 
-    if exists('{wpworkflow_dir}backup/'):
-        run('rm -rf {wpworkflow}backup/')
+    if exists('{psworkflow_dir}backup/'):
+        run('rm -rf {psworkflow}backup/')
 
-    if not exists('{wpworkflow_dir}backup/'.format(**env)):
-        run('mkdir {wpworkflow_dir}backup/'.format(**env))
+    if not exists('{psworkflow_dir}backup/'.format(**env)):
+        run('mkdir {psworkflow_dir}backup/'.format(**env))
 
-    if not exists('{wpworkflow_dir}backup/database/'.format(**env)):
-        run('mkdir {wpworkflow_dir}backup/database/'.format(**env))
+    if not exists('{psworkflow_dir}backup/database/'.format(**env)):
+        run('mkdir {psworkflow_dir}backup/database/'.format(**env))
 
-    if not exists('{wpworkflow_dir}backup/uploads/'.format(**env)):
-        run('mkdir {wpworkflow_dir}backup/uploads/'.format(**env))
+    if not exists('{psworkflow_dir}backup/uploads/'.format(**env)):
+        run('mkdir {psworkflow_dir}backup/uploads/'.format(**env))
 
     run(
-        'mv {wpworkflow_dir}/database/{tarball_name}.sql '.format(**env)
+        'mv {psworkflow_dir}/database/{tarball_name}.sql '.format(**env)
         +
-        '{wpworkflow_dir}/backup/database/'.format(**env)
+        '{psworkflow_dir}/backup/database/'.format(**env)
     )
 
     print 'Copying uploads...'
-    run('cp -r {public_dir}wp-content/uploads/* {wpworkflow_dir}backup/uploads/'.
+    run('cp -r {public_dir}wp-content/uploads/* {psworkflow_dir}backup/uploads/'.
         format(**env))
 
     print 'Creating tarball...'
-    with cd(env.wpworkflow_dir):
+    with cd(env.psworkflow_dir):
         urun('tar -czf {tarball_name}.tar.gz backup/*'.format(**env))
 
     print 'Downloading backup...'
@@ -716,15 +813,15 @@ def backup(tarball_name='backup', just_data=False):
 
     if download:
         get(
-            '{wpworkflow_dir}{tarball_name}.tar.gz'.format(**env),
+            '{psworkflow_dir}{tarball_name}.tar.gz'.format(**env),
             './backup/{tarball_name}.tar.gz'.format(**env)
         )
     else:
         print red('Backup canceled by user')
 
     print 'Cleaning working directory...'
-    run('rm -rf {wpworkflow_dir}backup/'.format(**env))
-    run('rm {wpworkflow_dir}{tarball_name}.tar.gz'.format(**env))
+    run('rm -rf {psworkflow_dir}backup/'.format(**env))
+    run('rm {psworkflow_dir}{tarball_name}.tar.gz'.format(**env))
 
     if download:
         print green(
@@ -735,17 +832,17 @@ def backup(tarball_name='backup', just_data=False):
 
 
 @task
-def wordpress_workflow_upgrade(repository='origin', branch='master'):
+def ps_workflow_upgrade(repository='origin', branch='master'):
     """
-    Upgrades wordpress-workflow
+    Upgrades prestashop-workflow
     """
     #upgrades code to current master
-    os.chdir('wordpress-workflow')
+    os.chdir('prestashop-workflow')
     ulocal('git fetch origin')
     ulocal('git pull {0} {1}'.format(repository, branch))
 
     os.chdir('../')
     #Updates vagrant provision
-    ulocal('wordpress-workflow/startProject.sh')
+    ulocal('prestashop-workflow/startProject.sh')
     ulocal('vagrant provision')
-    print green('wordpress-workflow upgraded', bold=True)
+    print green('prestashop-workflow upgraded', bold=True)
