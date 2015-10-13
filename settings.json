@@ -1,0 +1,32 @@
+{
+    "version": "1.5",
+    "full_version": "1.5.6.3",
+    "locale": "es_ES",
+    "theme": "default",
+    "plugins": [
+        {
+            "name": "ps-seo",
+            "active": true,
+            "version": "stable"
+        }
+    ],
+    "custom_plugins" : [
+        {
+            "name": "myPlugin",
+            "active": true
+        }
+    ],
+    "prestashop-workflow" : [
+        {
+            "dependencies-mannager": {
+            "software": "",
+            "version" : ""
+            },
+            "style-preprocessor": {
+
+            }
+        }
+    ] 
+
+}
+

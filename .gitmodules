@@ -1,0 +1,3 @@
+[submodule "prestashop-workflow"]
+	path = prestashop-workflow
+	url = git@github.com:rodrisan/prestashop-flow.git
