@@ -30,14 +30,26 @@ if [[ ! -d "$DIR/../src/database" ]]; then
     mkdir $DIR/../src/database
 fi
 
+if [[ ! -d "$DIR/../src/site" ]]; then
+    mkdir $DIR/../src/site
+fi
+
 echo "Setting configuration files"
 
+if [[ ! -f  "$DIR/../Vagrantfile-symlink" ]]; then
+    ln -s $DIR/Vagrantfile $DIR/../Vagrantfile-symlink
+fi
+
 if [[ ! -f  "$DIR/../Vagrantfile" ]]; then
-    ln -s $DIR/Vagrantfile $DIR/../Vagrantfile
+    cp $DIR/defaults/Vagrantfile $DIR/../Vagrantfile
 fi
 
 if [[ ! -f  "$DIR/../fabfile.py" ]]; then
     ln -s $DIR/fabfile.py $DIR/../fabfile.py
+fi
+
+if [[ ! -f  "$DIR/../customfab.py" ]]; then
+    cp $DIR/customfab.py $DIR/../customfab.py
 fi
 
 if [[ ! -f  "$DIR/../environments.json" ]]; then
